@@ -6,7 +6,7 @@ var config = {
     password: 'HQS0ftware_123%',
     server: '185.108.128.212',
     database: 'hqBusiness',
-    port: 2020,
+    port: 2022,
     options: {
         encrypt: true,
         trustServerCertificate: true
