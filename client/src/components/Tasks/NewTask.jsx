@@ -102,10 +102,10 @@ const NewTask = React.memo( props => {
     
     //States inserting new values into the new task created
 
-    var fortnight = new Date();
-    fortnight.setDate(fortnight.getDate()+14);
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate()+1);
 
-    const [dueDate, setDueDate] = useState(fortnight);
+    const [dueDate, setDueDate] = useState(tomorrow);
     const [reqDate, setReqDate] = useState(new Date());
     const [newDetails, setNewDetails] = useState("");
     const [newTaskNo, setNewTaskNo] = useState();
@@ -118,7 +118,7 @@ const NewTask = React.memo( props => {
     const [newNotes, setNewNotes] = useState("");
     const [newInvoice, setNewInvoice] = useState("");
     const [newEstimate, setNewEstimate] = useState("");
-    const [newTaskPriority, setNewTaskPriority] = useState(2);
+    const [newTaskPriority, setNewTaskPriority] = useState(1);
 
     const [urgent, setUrgent] = useState(null);
 
