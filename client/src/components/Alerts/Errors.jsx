@@ -11,7 +11,9 @@ import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 
 import { AiOutlineFlag } from 'react-icons/ai'
+import { MdErrorOutline } from "react-icons/md"
 
+import { TailSpin } from  'react-loader-spinner'
 
 
 //ReactDataGrid.io used for main grid
@@ -75,6 +77,19 @@ const getCount = (customer) => {
     return fetch('/processErrors', requestOptions)
   }
 
+  const processAllErrors = () => {
+    
+    
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({
+  
+      })
+    }
+    return fetch('/processAllErrors', requestOptions)
+  }
+
   const submitErrors = (status, selected) => {
     //console.log(selected);
     let detailsArray = [];
@@ -93,18 +108,21 @@ function Errors() {
     const [currentCustomer, setCurrentCustomer] = useState({});
     const [customers, setCustomers] = useState([]);
     const [count, setCount] = useState();
+    const [loading, setLoading] = useState(true);
 
 
     //const history= useHistory();
     useEffect(() => {
-        let mounted = true;
+      //setLoading(true);  
+      let mounted = true;
         //console.log(JSON.parse(localStorage.getItem('CustomerErrorCheck')).CustomerCode);
         let count=0
         if (count=0) {
             returnErrors(JSON.parse(localStorage.getItem('CustomerErrorCheck')).CustomerCode).then((data) => {
               if(mounted) {
                   setErrorList(data);   
-              }       
+              } 
+              setLoading(false);      
           });
 
           returnAlerts()
@@ -130,6 +148,7 @@ function Errors() {
               if(mounted) {
                   setErrorList(data);   
               }       
+              setLoading(false);      
             });
           
             returnAlerts()
@@ -146,14 +165,17 @@ function Errors() {
 
             //console.log(customers);
           }
+        //setLoading(false);
         return () => mounted = false;
         //console.log(currentCustomer);
     }, [currentCustomer]);
 
     const reLoadGrid = (customer) => {
-      //console.log("HELLO THERE!");  
+      setLoading(true);
+ 
       returnErrors(customer.CustomerCode).then((data) => {
-                setErrorList(data);         
+                setErrorList(data); 
+                setLoading(false);              
       });
 
       getCount(customer.CustomerCode).then((x) => {
@@ -164,6 +186,7 @@ function Errors() {
           }
       });
       
+      //setLoading(false);
     }
 
     const columns = [
@@ -254,6 +277,29 @@ function Errors() {
     ErrorCount: 0
   }
 
+  var loaded;
+
+  if (loading===false) {
+    console.log('Test');
+    loaded = <ReactDataGrid 
+                idProperty="Details"
+                columns={columns}
+                dataSource={errorList}
+                style={gridStyle}
+                theme={theme}
+                selected={selected}
+                checkboxColumn
+                onSelectionChange={onSelectionChange}
+                editable={true}
+              />
+  } else {
+    loaded= <div className="bar-chart-wrap spinner">
+        <TailSpin color="#282c34" height={200} width={200} ariaLabel='Loading'/>
+      </div>
+  }
+
+
+
     return(
         <>
         <div className='errors'>
@@ -278,6 +324,25 @@ function Errors() {
               <AiOutlineFlag />
         </Button>
         </OverlayTrigger>
+
+        <OverlayTrigger key='Make-Urgent' placement='bottom'
+              overlay={
+                <Tooltip id='tooltip-pdf'>
+                  Clear All Errors
+                </Tooltip>
+              }
+            >
+        <Button variant ="secondary"  
+          onClick={() => {
+            processAllErrors();
+            reLoadGrid(currentCustomer);
+          }}
+          disabled={false}
+          className='button-to-the-right'
+          >
+              <MdErrorOutline />
+        </Button>
+        </OverlayTrigger>
         </div>
         
         <div className="third-item">
@@ -300,17 +365,7 @@ function Errors() {
         
             
 
-              <ReactDataGrid 
-                idProperty="Details"
-                columns={columns}
-                dataSource={errorList}
-                style={gridStyle}
-                theme={theme}
-                selected={selected}
-                checkboxColumn
-                onSelectionChange={onSelectionChange}
-                editable={true}
-              />
+              {loaded}
 
 
 

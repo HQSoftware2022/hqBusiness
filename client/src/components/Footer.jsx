@@ -7,7 +7,7 @@ function Footer() {
       <footer class="py-3 grid-bg-colour fixed-bottom">
         <div class="container">
           <p class="m-0 text-center text-white">
-            Copyright &copy; HQ Software 2021, v1.86
+            Copyright &copy; HQ Software 2021, v1.87
           </p>
         </div>
       </footer>

@@ -1026,6 +1026,23 @@ const router = app => {
        }
     })
 
+    app.put('/processAllErrors/', async (req,res) => {
+        let queryString = "UPDATE HQS_Errors SET Status= 'R' WHERE Status IS NULL";
+        //console.log(queryString);
+        try{
+            const pool = await poolPromise
+            const result = await pool.request()
+            .query(queryString, (error, result) => {
+                if (error) throw error
+            
+                res.status(201).send(`RECORD UPDATED SUCCESSFULLY`);
+            });      
+        } catch (err) {
+            res.status(500)
+            res.send(err.message)
+        }        
+    })
+
 }
 module.exports = router;
 
