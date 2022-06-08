@@ -136,7 +136,7 @@ const NewTask = React.memo( props => {
           fortnight.setDate(fortnight.getDate()+14);
 
           setNewDetails("");
-          setNewTaskPriority(2);
+          setNewTaskPriority(1);
           setDueDate(fortnight);
           setReqDate(new Date());
           setNewRef1("");
